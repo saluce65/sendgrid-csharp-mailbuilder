@@ -4,14 +4,14 @@ This library requires .NET 4.0 and above.
 
 #Installation
 
-To use SendGrid MailBuilder in your C# project, you can either <a href="https://github.com/sendgrid/sendgrid-csharp-mailbuilder.git">download the SendGrid MailBuilder C# .NET libraries directly from our Github repository</a> or, if you have the NuGet package manager installed, you can grab them automatically.
+To use SendGrid MailBuilder in your C# project, you can either <a href="https://github.com/saluce65/sendgrid-csharp-mailbuilder.git">download the SendGrid MailBuilder C# .NET libraries directly from our Github repository</a> or, if you have the NuGet package manager installed, you can grab them automatically.
 
 ```
 PM> Install-Package SendGrid-MailBuilder 
 ```
 
 Once you have the SendGrid MailBuilder libraries properly referenced in your project, you can include calls to them in your code. 
-For a sample implementation, check the [Example](https://github.com/sendgrid/sendgrid-csharp-mailbuilder/tree/master/SendGrid/Example) folder.
+For a sample implementation, check the [Example](https://github.com/saluce65/sendgrid-csharp-mailbuilder/tree/master/SendGrid/Example) folder.
 
 Add the following namespaces to use the library:
 ```csharp
