@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SendGrid-MailBuilder")]
-[assembly: AssemblyDescription("SendGrid MailBuilder uses factory methods to fluently generate mail messages for SendGrid.")]
+[assembly: AssemblyTitle("SendGrid MailBuilder")]
+[assembly: AssemblyDescription("SendGrid MailBuilder provides a factory to fluently generate SendGrid mail objects.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Shawn A. Luce")]
 [assembly: AssemblyProduct("SendGrid MailBuilder")]

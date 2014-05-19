@@ -5,14 +5,14 @@ VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailBuilder", "SendGridMailBuilder\MailBuilder.csproj", "{42C10FAB-5944-47E5-A95D-2D37FDD08F2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SendGridMailBuilder.Tests", "SendGridMailBuilder.Tests\SendGridMailBuilder.Tests.csproj", "{C0F4183E-DBC4-453C-8A02-1689138CD00F}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{46CBE0BA-D5D1-45DE-8D2A-01B0FC42BD09}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.csproj", "{8A2B40C9-6418-4680-BFF5-9F303640633E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,10 +24,10 @@ Global
 		{42C10FAB-5944-47E5-A95D-2D37FDD08F2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42C10FAB-5944-47E5-A95D-2D37FDD08F2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42C10FAB-5944-47E5-A95D-2D37FDD08F2E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C0F4183E-DBC4-453C-8A02-1689138CD00F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C0F4183E-DBC4-453C-8A02-1689138CD00F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C0F4183E-DBC4-453C-8A02-1689138CD00F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C0F4183E-DBC4-453C-8A02-1689138CD00F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A2B40C9-6418-4680-BFF5-9F303640633E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A2B40C9-6418-4680-BFF5-9F303640633E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A2B40C9-6418-4680-BFF5-9F303640633E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A2B40C9-6418-4680-BFF5-9F303640633E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
