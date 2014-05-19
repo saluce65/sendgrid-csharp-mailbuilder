@@ -11,7 +11,7 @@ PM> Install-Package SendGrid-MailBuilder
 ```
 
 Once you have the SendGrid MailBuilder libraries properly referenced in your project, you can include calls to them in your code. 
-For a sample implementation, check the [Example](https://github.com/saluce65/sendgrid-csharp-mailbuilder/tree/master/SendGrid/Example) folder.
+For a sample implementation, check the [Example](https://github.com/saluce65/sendgrid-csharp-mailbuilder/tree/master/SendGridMailBuilder/Example) folder.
 
 Add the following namespaces to use the library:
 ```csharp
