@@ -5,12 +5,13 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using SendGrid;
+using System.Text.RegularExpressions;
 
 namespace SendGrid {
     public sealed class MailBuilder {
         private SendGridMessage sendgrid;
         private bool hideRecipients = false;
-
+        
         public static MailBuilder Create() {
             var mailBuilder = new MailBuilder();
             mailBuilder.sendgrid = new SendGridMessage();
