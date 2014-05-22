@@ -4,19 +4,19 @@ using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
-using Smtpapi;
+using SendGrid;
 
-namespace SendGridMail {
+namespace SendGrid {
     public sealed class MailBuilder {
-        private SendGrid sendgrid;
+        private SendGridMessage sendgrid;
         private bool hideRecipients = false;
 
         public static MailBuilder Create() {
             var mailBuilder = new MailBuilder();
-            mailBuilder.sendgrid = SendGrid.GetInstance();
+            mailBuilder.sendgrid = new SendGridMessage();
             return mailBuilder;
         }
-        public SendGrid Build() {
+        public SendGridMessage Build() {
             var exceptions = new List<Exception>();
             if (string.IsNullOrEmpty(sendgrid.Html) && string.IsNullOrEmpty(sendgrid.Text)) {
                 exceptions.Add(new InvalidOperationException("Mail does not contain a body."));
@@ -73,44 +73,52 @@ namespace SendGridMail {
         }
 
         public MailBuilder Cc(MailAddress address) {
-            return this.Cc(address.Address, address.DisplayName);
+            var currentCc = new List<MailAddress>(sendgrid.Cc);
+            currentCc.Add(address);
+            sendgrid.Cc = currentCc.ToArray();
+            return this;
         }
         public MailBuilder Cc(string email) {
-            sendgrid.AddCc(email);
-            return this;
+            return this.Cc(new MailAddress(email));
         }
         public MailBuilder Cc(string email, string displayName) {
-            sendgrid.AddCc(EmailFormat(displayName, email));
-            return this;
+            return this.Cc(new MailAddress(email, displayName));
         }
         public MailBuilder Cc(IEnumerable<string> addresses) {
-            sendgrid.AddCc(addresses);
-            return this;
+            List<MailAddress> newAddresses = addresses.ToList().ConvertAll<MailAddress>((x) => { return new MailAddress(x); });
+            return this.Cc(newAddresses);
         }
         public MailBuilder Cc(IEnumerable<MailAddress> addresses) {
-            return this.Cc(addresses.ToListString());
+            var currentCc = new List<MailAddress>(sendgrid.Cc);
+            currentCc.AddRange(addresses);
+            sendgrid.Cc = currentCc.ToArray();
+            return this;
         }
         public MailBuilder Cc(MailAddressCollection addresses) {
             return this.Cc(addresses.ToList());
         }
 
         public MailBuilder Bcc(MailAddress address) {
-            return this.Bcc(address.Address, address.DisplayName);
+            var currentBcc = new List<MailAddress>(sendgrid.Bcc);
+            currentBcc.Add(address);
+            sendgrid.Bcc = currentBcc.ToArray();
+            return this;
         }
         public MailBuilder Bcc(string email) {
-            sendgrid.AddBcc(email);
-            return this;
+            return this.Bcc(new MailAddress(email));
         }
         public MailBuilder Bcc(string email, string displayName) {
-            sendgrid.AddBcc(EmailFormat(displayName, email));
-            return this;
+            return this.Bcc(new MailAddress(email, displayName));
         }
         public MailBuilder Bcc(IEnumerable<string> addresses) {
-            sendgrid.AddBcc(addresses);
-            return this;
+            List<MailAddress> newAddresses = addresses.ToList().ConvertAll<MailAddress>((x) => { return new MailAddress(x); });
+            return this.Bcc(newAddresses);
         }
         public MailBuilder Bcc(IEnumerable<MailAddress> addresses) {
-            return this.Bcc(addresses.ToListString());
+            var currentBcc = new List<MailAddress>(sendgrid.Bcc);
+            currentBcc.AddRange(addresses);
+            sendgrid.Bcc = currentBcc.ToArray();
+            return this;
         }
         public MailBuilder Bcc(MailAddressCollection addresses) {
             return this.Bcc(addresses.ToList());
@@ -161,22 +169,12 @@ namespace SendGridMail {
 
         public MailBuilder EmbedImage(Stream stream, string name, string cid) {
             sendgrid.AddAttachment(stream, name);
-            //sendgrid.EmbedImage(name, cid);
-            var embedImageMethod = sendgrid.GetType().GetMethod("EmbedImage");
-            if (embedImageMethod == null) {
-                throw new NotImplementedException("SendGrid does not yet implement the required method to embed images");
-            }
-            embedImageMethod.Invoke(sendgrid, new object[2] { name, cid });
+            sendgrid.EmbedImage(name, cid);
             return this;
         }
         public MailBuilder EmbedImage(string filePath, string cid) {
             sendgrid.AddAttachment(filePath);
-            //sendgrid.EmbedImage(new FileInfo(filePath).Name, cid);
-            var embedImageMethod = sendgrid.GetType().GetMethod("EmbedImage");
-            if (embedImageMethod == null) {
-                throw new NotImplementedException("SendGrid does not yet implement the required method to embed images");
-            }
-            embedImageMethod.Invoke(sendgrid, new object[2] { new FileInfo(filePath).Name, cid });
+            sendgrid.EmbedImage(new FileInfo(filePath).Name, cid);
             return this;
         }
         public MailBuilder EmbedImage(LinkedResource resource) {
@@ -320,8 +318,12 @@ namespace SendGridMail {
 
     internal static class Extensions {
         public static IEnumerable<string> ToListString(this IEnumerable<MailAddress> addresses) {
-            return addresses.ToList().ConvertAll<string>(address => string.Format("{0} <{1}>", address.DisplayName, address.Address));
+            return addresses.ToList().ConvertAll<string>(address => 
+                string.Format(
+                    string.IsNullOrWhiteSpace(address.DisplayName) ? "{1}" : "{0} <{1}>", 
+                    address.DisplayName, 
+                    address.Address)
+                );
         }
-
     }
 }

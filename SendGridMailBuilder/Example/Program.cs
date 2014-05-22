@@ -1,18 +1,18 @@
-﻿using SendGridMail;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using SendGrid;
 
 namespace Example {
     internal class Program {
         // this code is used for the SMTPAPI examples
         private static void Main() {
             // Create the email object first, then add the properties.
-            SendGrid myMessage = MailBuilder.Create()
+            SendGridMessage myMessage = MailBuilder.Create()
                 .To("anna@example.com")
                 .From(new MailAddress("john@example.com", "John Smith"))
                 .Subject("Testing the SendGrid Library")
@@ -23,7 +23,7 @@ namespace Example {
             var credentials = new NetworkCredential("username", "password");
 
             // Create a Web transport for sending email.
-            var transportWeb = Web.GetInstance(credentials);
+            var transportWeb = new Web(credentials);
 
             // Send the email.
             if (transportWeb != null)
