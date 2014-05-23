@@ -157,6 +157,7 @@ $RECYCLE.BIN/
 
 #Package Files
 SendGridMailBuilder/packages
+nuget.exe
 *.nuspec
 *.nupkg
 *.zip
