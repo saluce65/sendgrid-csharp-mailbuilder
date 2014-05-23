@@ -300,11 +300,11 @@ namespace SendGridMailBuilder.Tests {
         [TestMethod]
         public void Test_EnablingTemplate() {
             var mail = BasicMailBuilder
-                .EnableTemplate("<% BODY %>")
+                .EnableTemplate("<% body %>")
                 .Build();
 
             var message = new SendGridMessage();
-            message.EnableTemplate("<% BODY %>");
+            message.EnableTemplate("<% body %>");
             Assert.IsFalse(string.IsNullOrEmpty(message.Header.JsonString()));
             Assert.AreEqual(message.Header.JsonString(), mail.Header.JsonString());
         }
@@ -319,24 +319,33 @@ namespace SendGridMailBuilder.Tests {
             Assert.IsFalse(string.IsNullOrEmpty(message.Header.JsonString()));
             Assert.AreEqual(message.Header.JsonString(), mail.Header.JsonString());
         }
-        #endregion
-
-        // There seems to be some issue with SendGrid.EnableUnsubscribe.  
-        // Need to investigate that issue before enabling this test.
-        //[TestMethod]
+        [TestMethod]
         public void Test_EnablingUnsubscribe_text_html() {
             var mail = BasicMailBuilder
                 .EnableUnsubscribe(
-                    "If you would like to unsubscribe and stop receiving these emails <% click here %>.",
-                    "If you would like to unsubscribe and stop receiving these emails click here: <% %>.")
+                    "If you would like to unsubscribe and stop receiving these emails click here: <% %>.",
+                    "If you would like to unsubscribe and stop receiving these emails click <% here %>.")
                 .Build();
 
             var message = new SendGridMessage();
             message.EnableUnsubscribe(
-                "If you would like to unsubscribe and stop receiving these emails <% click here %>.",
-                "If you would like to unsubscribe and stop receiving these emails click here: <% %>.");
+                "If you would like to unsubscribe and stop receiving these emails click here: <% %>.",
+                "If you would like to unsubscribe and stop receiving these emails click <% here %>.");
+
             Assert.IsFalse(string.IsNullOrEmpty(message.Header.JsonString()));
             Assert.AreEqual(message.Header.JsonString(), mail.Header.JsonString());
+        }
+        #endregion
+
+        [TestMethod]
+        public void Test_EnablingUnsubscribe_text_html_bypass() {
+            var mail = BasicMailBuilder
+                .EnableUnsubscribe(
+                    "If you would like to unsubscribe and stop receiving these emails click here: <% %>.",
+                    "If you would like to unsubscribe and stop receiving these emails <% click here %>.")
+                .Build();
+
+            Assert.IsFalse(string.IsNullOrEmpty(mail.Header.JsonString()));
         }
 
         #region Header Methods

@@ -9,9 +9,13 @@ using System.Text.RegularExpressions;
 
 namespace SendGrid {
     public sealed class MailBuilder {
+        private static readonly Regex TemplateTest = new Regex(@"<%\s*body\s*%>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex TextUnsubscribeTest = new Regex(@"<%\s*%>", RegexOptions.Compiled);
+        private static readonly Regex HtmlUnsubscribeTest = new Regex(@"<%\s*([^\s%]+\s?)+\s*%>", RegexOptions.Compiled);
+
         private SendGridMessage sendgrid;
         private bool hideRecipients = false;
-        
+
         public static MailBuilder Create() {
             var mailBuilder = new MailBuilder();
             mailBuilder.sendgrid = new SendGridMessage();
@@ -237,7 +241,22 @@ namespace SendGrid {
             return this;
         }
         public MailBuilder EnableUnsubscribe(string text, string html) {
-            sendgrid.EnableUnsubscribe(text, html);
+            // TODO: Because of a bug in SendGrid 3.0.0, we are directly running the corrected EnableUnsubscribe(text, html) code.  Remove once the new build of SendGrid is available.
+            //sendgrid.EnableUnsubscribe(text, html);
+            var filter = "subscriptiontrack";
+
+            if (!TextUnsubscribeTest.IsMatch(text)) {
+                throw new Exception("Missing substitution replacementTag in text");
+            }
+
+            if (!HtmlUnsubscribeTest.IsMatch(html)) {
+                throw new Exception("Missing substitution replacementTag in html");
+            }
+
+            sendgrid.Header.EnableFilter(filter);
+            sendgrid.Header.AddFilterSetting(filter, new List<string> { "text/plain" }, text);
+            sendgrid.Header.AddFilterSetting(filter, new List<string> { "text/html" }, html);
+
             return this;
         }
         public MailBuilder EnableUnsubscribe(string replace) {
@@ -319,10 +338,10 @@ namespace SendGrid {
 
     internal static class Extensions {
         public static IEnumerable<string> ToListString(this IEnumerable<MailAddress> addresses) {
-            return addresses.ToList().ConvertAll<string>(address => 
+            return addresses.ToList().ConvertAll<string>(address =>
                 string.Format(
-                    string.IsNullOrWhiteSpace(address.DisplayName) ? "{1}" : "{0} <{1}>", 
-                    address.DisplayName, 
+                    string.IsNullOrWhiteSpace(address.DisplayName) ? "{1}" : "{0} <{1}>",
+                    address.DisplayName,
                     address.Address)
                 );
         }

@@ -29,7 +29,7 @@ The following example demonstrates how to create an email object and populate it
 
 ```csharp
 // Create the email object first, then add the properties.
-SendGrid myMessage = MailBuilder.Create()
+SendGridMessage myMessage = MailBuilder.Create()
 
     // Add the message properties.
     .From(new MailAddress("john@example.com"))
@@ -55,7 +55,7 @@ SendGrid myMessage = MailBuilder.Create()
 
 To have the recipients listed as part of the X-SMTPAPI header rather than directly on the email, use the *HideRecipients* method:
 ```csharp
-SendGrid myMessage = MailBuilder.Create()
+SendGridMessage myMessage = MailBuilder.Create()
     .To(new List<String>
         {
             @"Jeff Smith <jeff@example.com>",
@@ -74,13 +74,27 @@ SendGrid myMessage = MailBuilder.Create()
 Attachments can be added to a message by calling the *AddAttachment* method and specifying the name and path of the file you want to attach, or by passing a stream. You can include multiple attachments by chaining this method once for each file you wish to attach. The following example demonstrates adding an attachment to a message:
 
 ```csharp
-SendGrid myMessage = MailBuilder.Create()
+SendGridMessage myMessage = MailBuilder.Create()
     .To("anna@example.com")
     .From("john@example.com", "John Smith")
     .Subject( "Testing the MailBuilder")
     .Text("Hello World!")
     .AddAttachment(@"C:\file1.txt")
     .AddAttachment(new FileStream(@"C:\file.txt", FileMode.Open), "My Cool File.txt")
+    .Build();
+```
+
+#How to: Embed an Image
+
+Images can be embedded in a message by calling the *EmbedImage* method, giving the cid and either specifying the name and path of the image you want to embed or passing a stream. You can embed multiple images by chaining this method once for each image you wish to embed. The following example demonstrates embedding an image in a message:
+
+```csharp
+SendGridMessage myMessage = MailBuilder.Create()
+    .To("anna@example.com")
+    .From("john@example.com", "John Smith")
+    .Subject( "Testing the MailBuilder")
+    .Html("<p>Check out this cat!</p><img src='cid:lolcat.jpg' />")
+    .EmbedImage(@"C:\file1.jpg", "lolcat.jpg")
     .Build();
 ```
 
@@ -95,7 +109,7 @@ The following examples demonstrate the footer and click tracking filters:
 ##Footer
 ```csharp
 // Create the email object first, then add the properties.
-SendGrid myMessage = MailBuilder.Create()
+SendGridMessage myMessage = MailBuilder.Create()
     .To("anna@example.com")
     .From("john@example.com", "John Smith")
     .Subject( "Testing the MailBuilder")
@@ -109,7 +123,7 @@ SendGrid myMessage = MailBuilder.Create()
 ##Click tracking
 ```csharp
 // Create the email object first, then add the properties.
-SendGrid myMessage = MailBuilder.Create()
+SendGridMessage myMessage = MailBuilder.Create()
     .To("anna@example.com")
     .From("john@example.com", "John Smith")
     .Subject( "Testing the MailBuilder")
